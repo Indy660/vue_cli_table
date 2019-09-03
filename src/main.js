@@ -1,9 +1,9 @@
 import Vue from 'vue'
 import App from './App.vue'
-import BootstrapVue from 'bootstrap-vue'
+import BootstrapVue from 'bootstrap-vue'  //для загрузки BOOTSTRAP
 
 
-//для загрузски BOOTSTRAP
+//для загрузки BOOTSTRAP
 Vue.use(BootstrapVue);
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
