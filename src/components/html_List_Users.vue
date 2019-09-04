@@ -67,6 +67,14 @@ export default {
       let user=this.findThisUser(this.userList, login);
       let trueIndex= this.userList.indexOf(user);
       this.userList.splice(trueIndex, 1)
+    },
+    findThisUser: function(list, trueLogin) {
+      for (let i = 0; i < list.length; i++) {
+        if (list[i].login === trueLogin) {
+          return list[i]
+        }
+      }
+      return false
     }
   }
 }

@@ -27,14 +27,6 @@
                 this.nameUser="";
                 this.loginUser="";
                 this.passwordUser=""
-            },
-            findThisUser: function(list, trueLogin) {
-                for (let i = 0; i < list.length; i++) {
-                    if (list[i].login === trueLogin) {
-                        return list[i]
-                    }
-                }
-                return false
             }
         }
     }
