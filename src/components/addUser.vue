@@ -4,14 +4,15 @@
         <input v-model="nameUser" placeholder="Имя">
         <input v-model="loginUser" placeholder="Логин">
         <input v-model="passwordUser" placeholder="Пароль">
-            <button  v-on:click="pushing">Добавить пользователя</button>
+        <button  v-on:click="pushing">Добавить пользователя</button>
+
     </div>
 </template>
 
 <script>
     export default {
         name: "addUser",
-        props:["userList"],
+        props:[ "addUserFunc"],
         data() {
             return {
                 lengthArray:null,
@@ -19,15 +20,15 @@
                 loginUser: null,
                 passwordUser: null,
             }
-            },
+        },
         methods:{
             pushing: function () {
-                let newUser={id:++this.lengthArray, name:this.nameUser, login:this.loginUser, password:this.passwordUser};
-                this.userList.push(newUser);
+                this.addUserFunc(this.nameUser,this.loginUser,this.passwordUser);
+                // let newUser={id:++this.lengthArray, name:this.nameUser, login:this.loginUser, password:this.passwordUser};
                 this.nameUser="";
                 this.loginUser="";
-                this.passwordUser=""
-            }
+                this.passwordUser="";
+            },
         }
     }
 </script>

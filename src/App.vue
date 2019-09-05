@@ -1,14 +1,17 @@
 <template>
   <div id="app">
-      <addUser v-bind:userList="userList"/>
-    <ListUsers v-bind:userList="userList"/>
-<!--    <axios v-bind:userList="userList"/>-->
+
+      <addUser v-bind:addUserFunc="addUserFunc"/>
+      <html_List_Users v-bind:userList="userList"  v-bind:deleteUserFunc="deleteUserFunc"/>
+
+
+
   </div>
 </template>
 
 <script>
 import addUser from './components/addUser.vue'  //импортирую файл
-import ListUsers from './components/html_List_Users.vue'  //импортирую файл
+import html_List_Users from './components/html_List_Users.vue'  //импортирую файл
 import axios from "axios"
 
 
@@ -17,41 +20,46 @@ export default {
   name: 'app',
   data() {
     return {
-      userList: []
-      // {id: 1, name: 'Admin', login: 'Admin', password: "qwe"},
-      // {id: 2, name: 'TestUser', login: 'test', password: "123"},
-      // {id: 3, name: 'Dima', login: 'DimaK', password: "12345"},
-      // {id: 4, name: 'Sacha', login: 'gundi5', password: "BF236BF"},
-      // {id: 5, name: 'Дима', login: 'Indy660', password: '123'}
+      userList: [],
     }
   },
   mounted() {
-      axios.get('http://localhost:3000/ajax/users.json/')
-            .then((response) => {
-                console.log(response);
-                this.userList = response.data;
-            });
+     this.reload()
   },
 
   components: {
-    ListUsers,     //ListUsers нужно сделать в 3-х местах APP
+    html_List_Users,     //html_List_Users нужно сделать в 3-х местах APP
     addUser
   },
-    method: {
-        addUser: function() {
-            axios({
-                method: 'get',
-                url: 'http://localhost:3000/ajax/users.json/addUser',
-                data: {
-                    name: this.nameUser,
-                    login: this.loginUser,
-                    password: this.passwordUser
+    methods: {
+        addUserFunc: function(name,login,password) {
+            axios.post(`http://localhost:3000/ajax/users.json/addUser`, {
+                // data:{                       //для гет запросов
+                //     name, login, password
+                // }
+                login:login, name, password
+            })
+            .then(() => this.reload())
+        },
+        deleteUserFunc: function (id) {
+            axios.get(`http://localhost:3000/ajax/users.json/delete`, {
+                params:{
+                    id
                 }
-            });
-        }
-//получение списка пользователей
-// добавление списка пользователей
-        //удаления
+            })
+                .then(() => this.reload())
+        },
+       reload: function () {
+           axios.get('http://localhost:3000/ajax/users.json/',{
+               params:{
+                   t:Date.now()
+               }
+           })                                   //вспомогательная функция, чтобы не кэшировалось
+           .then((response) => {
+               //console.log(response.data);
+               this.userList = response.data;   //метод для отрисовки табилцы через другой сервер
+            })
+       }
     }
 }
 </script>
