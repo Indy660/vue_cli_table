@@ -15,7 +15,6 @@
         props:[ "addUserFunc"],
         data() {
             return {
-                lengthArray:null,
                 nameUser: null,
                 loginUser: null,
                 passwordUser: null,
@@ -24,7 +23,6 @@
         methods:{
             pushing: function () {
                 this.addUserFunc(this.nameUser,this.loginUser,this.passwordUser);
-                // let newUser={id:++this.lengthArray, name:this.nameUser, login:this.loginUser, password:this.passwordUser};
                 this.nameUser="";
                 this.loginUser="";
                 this.passwordUser="";

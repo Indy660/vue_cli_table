@@ -1,11 +1,7 @@
 <template>
   <div id="app">
-
       <addUser v-bind:addUserFunc="addUserFunc"/>
       <html_List_Users v-bind:userList="userList"  v-bind:deleteUserFunc="deleteUserFunc"/>
-
-
-
   </div>
 </template>
 
@@ -37,16 +33,12 @@ export default {
                 // data:{                       //для гет запросов
                 //     name, login, password
                 // }
-                login:login, name, password
+                login, name, password           //для пост запросов
             })
             .then(() => this.reload())
         },
         deleteUserFunc: function (id) {
-            axios.get(`http://localhost:3000/ajax/users.json/delete`, {
-                params:{
-                    id
-                }
-            })
+            axios.post(`http://localhost:3000/ajax/users.json/delete`, { id })
                 .then(() => this.reload())
         },
        reload: function () {
