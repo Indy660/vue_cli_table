@@ -1,8 +1,9 @@
 <!--HTML-->
 <template>
     <div  class="container py-5 text-center">
+      <p> user:{{authorizedUser}} </p>
       <table class="table table-bordered table-dark">
-        <thead>
+      <thead>
         <tr>
           <th scope="col"><img src="../assets/sort.svg" width="25" height="25" class="float-right" v-on:click="addParametrsForSort('id')">ID</th>
           <th scope="col"><img src="../assets/sort.svg" width="25" height="25" class="float-right" v-on:click="addParametrsForSort('name')">Имя</th>
@@ -29,7 +30,7 @@
 
 export default {
   name: 'List',
-  props:["userList", "deleteUserFunc"],
+  props:["userList", "deleteUserFunc", "authorizedUser"],
   data() {
     return {
       sortColumn: '',
