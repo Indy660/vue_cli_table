@@ -1,7 +1,7 @@
 <!--HTML-->
 <template>
     <div  class="container py-5 text-center">
-      <p> user:{{authorizedUser}} </p>
+      <p> Пользователь: {{authorizedUser}} </p>
       <table class="table table-bordered table-dark">
       <thead>
         <tr>

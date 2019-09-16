@@ -1,9 +1,15 @@
 <template>
     <div id="app">
         <template v-if="token!== null">
-            <addUser v-bind:addUserFunc="addUserFunc" v-bind:user="user"/>
-            <html_List_Users v-bind:userList="userList"  v-bind:deleteUserFunc="deleteUserFunc"  v-bind:authorizedUser="authorizedUser"/>
-<!--            <files v-bind:userList="userList" />-->
+            <navbar  v-bind:mainPage="mainPage" v-bind:Logout="Logout" v-bind:authorizedUser="authorizedUser"  v-bind:showArrayFiles="showArrayFiles"  v-bind:showArrayUsers="showArrayUsers" />
+            <template v-if="mainPage==='users'">
+                <addUser v-bind:addUserFunc="addUserFunc" v-bind:user="user"/>
+                <html_List_Users v-bind:userList="userList"  v-bind:deleteUserFunc="deleteUserFunc" v-bind:authorizedUser="authorizedUser"/>
+            </template>
+            <template v-else-if="mainPage ==='files'">
+                <files v-bind:userFiles = "userFiles" />
+<!--            <button  v-on:click="getArrayFilesFunc">Показать файлы в папке</button>-->
+            </template>
         </template>
 
         <template v-else>
@@ -18,6 +24,7 @@
     import html_List_Users from './components/html_List_Users.vue'  //импортирую файл
     import enter from './components/enter.vue'
     import files from './components/files.vue'
+    import navbar from './components/navbar.vue'
     import axios from "axios"
 
 
@@ -28,9 +35,11 @@
         data() {
             return {
                 userList: [],
+                userFiles: [],
                 user:null,
                 token: null,
-                authorizedUser:null
+                authorizedUser:null,
+                mainPage:"users"
             }
 
         },
@@ -38,7 +47,7 @@
             this.token=localStorage.getItem('jwttoken');
             if(this.token){
                 this.setTitleAuth();
-                this.checkUserFunc();
+                this.rememberName();
                 this.reload();  //для обновления списка пользователей
             }
 
@@ -48,7 +57,8 @@
             html_List_Users,     //html_List_Users нужно сделать в 3-х местах APP
             addUser,
             enter,
-            files
+            files,
+            navbar
         },
         methods: {
             addUserFunc: function(name,login,password, ) {
@@ -77,14 +87,14 @@
             },
             setTitleAuth () {
                 if(this.token){
-                    axios.defaults.headers.common = {Authorization : `Token_is: ${this.token}`}
+                    axios.defaults.headers.common = {Authorization : `Token_is: ${this.token}`}   //ко всем запросам добавляет токен
                     // прикрепляю заголовок авторизации, теперь мы не должны передавать токен каждый раз
                 }
             },
             rememberName: function () {
                 axios.get('http://localhost:3000/ajax/users.json/name')
                     .then((response) => {
-                        this.authorizedUser = response.data;   //метод для отрисовки табилцы через другой сервер
+                        this.authorizedUser = response.data.name;   //метод для отрисовки табилцы через другой сервер
                     })
             },
             checkUserFunc: function (login, password) {
@@ -95,9 +105,31 @@
                         console.log(this.authorizedUser);
                         localStorage.setItem('jwttoken', response.data.token);          //для послдеующего входа
                         this.setTitleAuth();
-                        // this.rememberName();
                         this.reload();
                     })
+            },
+            // getArrayFilesFunc: function () {
+            //     axios.get('http://localhost:3000/ajax/users.json/files')
+            //         .then((response) => {
+            //             this.userFiles = response.data.files;   //метод для отрисовки табилцы через другой сервер
+            //             console.log("Список файлов"+this.userFiles);
+            //         })
+            // },
+            Logout: function () {
+                this.token=null;
+                localStorage.removeItem('jwttoken');
+                axios.defaults.headers.common = null
+            },
+            showArrayFiles: function () {
+                this.mainPage="files";
+                axios.get('http://localhost:3000/ajax/users.json/files')
+                    .then((response) => {
+                        this.userFiles = response.data.files;
+                        // console.log("Список файлов"+this.userFiles);
+                    })
+            },
+            showArrayUsers: function () {
+                this.mainPage="users";
             }
         }
     }
