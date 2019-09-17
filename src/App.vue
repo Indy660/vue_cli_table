@@ -1,19 +1,19 @@
 <template>
     <div id="app">
-        <template v-if="token!== null">
-            <navbar  v-bind:mainPage="mainPage" v-bind:Logout="Logout" v-bind:authorizedUser="authorizedUser"  v-bind:showArrayFiles="showArrayFiles"  v-bind:showArrayUsers="showArrayUsers" />
-            <template v-if="mainPage==='users'">
-                <addUser v-bind:addUserFunc="addUserFunc" v-bind:user="user"/>
-                <html_List_Users v-bind:userList="userList"  v-bind:deleteUserFunc="deleteUserFunc" v-bind:authorizedUser="authorizedUser"/>
+        <template v-if = "token !== null">
+            <navbar  v-bind:mainPage = "mainPage" v-bind:Logout = "Logout" v-bind:authorizedUser = "authorizedUser"  v-bind:showArrayFiles = "showArrayFiles"  v-bind:showArrayUsers = "showArrayUsers" />
+            <template v-if = "mainPage === 'users'">
+                <addUser v-bind:addUserFunc = "addUserFunc" v-bind:user = "user"/>
+                <html_List_Users v-bind:userList = "userList"  v-bind:deleteUserFunc = "deleteUserFunc" v-bind:authorizedUser = "authorizedUser"/>
             </template>
-            <template v-else-if="mainPage ==='files'">
-                <files v-bind:userFiles = "userFiles" />
+            <template v-else-if="mainPage === 'files'">
+                <files v-bind:userFiles = "userFiles"  v-bind:addNewFile = "addNewFile" v-bind:deleteFile = "deleteFile"/>
 <!--            <button  v-on:click="getArrayFilesFunc">Показать файлы в папке</button>-->
             </template>
         </template>
 
         <template v-else>
-            <enter v-bind:checkUserFunc="checkUserFunc" v-bind:token="token"/>
+            <enter v-bind:checkUserFunc = "checkUserFunc" v-bind:token = "token"/>
         </template>
     </div>
 </template>
@@ -48,7 +48,7 @@
             if(this.token){
                 this.setTitleAuth();
                 this.rememberName();
-                this.reload();  //для обновления списка пользователей
+                this.reloadUserList();  //для обновления списка пользователей
             }
 
         },
@@ -61,33 +61,42 @@
             navbar
         },
         methods: {
-            addUserFunc: function(name,login,password, ) {
+            addUserFunc: function (name, login, password,) {
                 axios.post(`http://localhost:3000/ajax/users.json/addUser`, {
                     // data:{                       //для гет запросов
                     //     name, login, password
                     // }
                     login, name, password           //для пост запросов
                 })
-                    .then(() => this.reload())
+                    .then(() => this.reloadUserList())
             },
             deleteUserFunc: function (id) {
-                axios.post(`http://localhost:3000/ajax/users.json/delete`, { id })
-                    .then(() => this.reload())
+                axios.post(`http://localhost:3000/ajax/users.json/delete`, {id})
+                    .then(() => this.reloadUserList())
             },
-            reload: function () {
+            reloadUserList: function () {
                 axios.get('http://localhost:3000/ajax/users.json/', {
                     params: {
                         t: Date.now(),  //вспомогательная функция, чтобы не кэшировалось
                     }
                 })
                     .then((response) => {
-                        //console.log(response.data);
                         this.userList = response.data;   //метод для отрисовки табилцы через другой сервер
                     })
             },
-            setTitleAuth () {
-                if(this.token){
-                    axios.defaults.headers.common = {Authorization : `Token_is: ${this.token}`}   //ко всем запросам добавляет токен
+            reloadFileList: function () {
+                axios.get('http://localhost:3000/ajax/users.json/files', {
+                    params: {
+                        t: Date.now(),  //вспомогательная функция, чтобы не кэшировалось
+                    }
+                })
+                    .then((response) => {
+                        this.userFiles = response.data.files;   //метод для отрисовки табилцы через другой сервер
+                    })
+            },
+            setTitleAuth() {
+                if (this.token) {
+                    axios.defaults.headers.common = {Authorization: `Token_is: ${this.token}`}   //ко всем запросам добавляет токен
                     // прикрепляю заголовок авторизации, теперь мы не должны передавать токен каждый раз
                 }
             },
@@ -98,39 +107,43 @@
                     })
             },
             checkUserFunc: function (login, password) {
-                axios.post(`http://localhost:3000/ajax/users.json/checkuser`, { login, password })
+                axios.post(`http://localhost:3000/ajax/users.json/checkuser`, {login, password})
                     .then((response) => {
-                        this.token=response.data.token;    //для первого входа
-                        this.authorizedUser=response.data.user_name;
+                        this.token = response.data.token;    //для первого входа
+                        this.authorizedUser = response.data.user_name;
                         console.log(this.authorizedUser);
                         localStorage.setItem('jwttoken', response.data.token);          //для послдеующего входа
                         this.setTitleAuth();
-                        this.reload();
+                        this.reloadUserList();
                     })
             },
-            // getArrayFilesFunc: function () {
-            //     axios.get('http://localhost:3000/ajax/users.json/files')
-            //         .then((response) => {
-            //             this.userFiles = response.data.files;   //метод для отрисовки табилцы через другой сервер
-            //             console.log("Список файлов"+this.userFiles);
-            //         })
-            // },
             Logout: function () {
-                this.token=null;
+                this.token = null;
                 localStorage.removeItem('jwttoken');
                 axios.defaults.headers.common = null
             },
             showArrayFiles: function () {
-                this.mainPage="files";
+                this.mainPage = "files";
                 axios.get('http://localhost:3000/ajax/users.json/files')
                     .then((response) => {
                         this.userFiles = response.data.files;
-                        // console.log("Список файлов"+this.userFiles);
                     })
             },
             showArrayUsers: function () {
-                this.mainPage="users";
-            }
+                this.mainPage = "users";
+            },
+            addNewFile: function (domain, ip) {
+                axios.post(`http://localhost:3000/ajax/users.json/addFiles`, {domain, ip})
+                    .then(() => {
+                        this.reloadFileList()
+                    })
+            },
+           deleteFile: function (delFile) {
+                axios.post(`http://localhost:3000/ajax/users.json/delFiles`, {delFile})
+                    .then(() => {
+                        this.reloadFileList()
+                    })
+            },
         }
     }
 

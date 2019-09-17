@@ -16,8 +16,8 @@
           <td>{{user.id}}</td>
           <td>{{user.name}}</td>
           <td>{{user.login}}</td>
-          <td>{{user.password}} <img src="../assets/cancel.svg" width="25" height="25"
-                                     class="float-right"  v-on:click="deleteUserFunc(user.id)"></td>
+          <td>{{user.password}} <img src = "../assets/cancel.svg" width="25" height="25"
+                                     class="float-right"  v-on:click = "deleteUserFunc(user.id)"></td>
         </tr>
         </tbody>
       </table>
