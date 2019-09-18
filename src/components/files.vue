@@ -19,9 +19,9 @@
                 </thead>
                 <tbody>
                 <tr v-for="file in userFiles">
-                    <td >{{file}}</td>
-                    <td >  <a><img src="../assets/cancel.svg" width="25" height="25"
-                                class="float-right" v-on:click="deleteFile(file)"></a> </td>
+                    <td >{{file.domain}}</td>
+                    <td >{{file.ip}}  <a><img src="../assets/cancel.svg" width="25" height="25"
+                                class="float-right" v-on:click="deleteFile(file.domain)"></a> </td>
                 </tr>
                 </tbody>
                 </table>
