@@ -143,7 +143,14 @@
                     .then(() => {
                         this.reloadFileList()
                     })
-            },
+            }
+            // searchFile: function (whatWeSearch) {
+            //     axios.post(`http://localhost:3000/ajax/users.json/search`, {whatWeSearch})
+            //         .then(() => {
+            //             this.reloadFileList()
+            //         })
+            // },
+
         }
     }
 

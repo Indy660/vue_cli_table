@@ -2,6 +2,8 @@
 <template>
     <div  class="container py-5 text-center">
       <p> Пользователь: {{authorizedUser}} </p>
+      <input type="text" v-model="search" placeholder="Поиск пользователя">
+      <p></p>
       <table class="table table-bordered table-dark">
       <thead>
         <tr>
@@ -12,7 +14,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr v-for="user in userSortList">
+        <tr v-for="user in searchAndSortFiles">
           <td>{{user.id}}</td>
           <td>{{user.name}}</td>
           <td>{{user.login}}</td>
@@ -34,19 +36,33 @@ export default {
   data() {
     return {
       sortColumn: '',
-      sortDirection:-1
+      sortDirection:-1,
+      search: ""
     }
-  },
-  computed: {
-    userSortList: function () {
-      const sortColumn = this.sortColumn;
-        return this.userList.slice().sort((a, b) => {
-          if (a[sortColumn] < b[sortColumn]) {
-            return this.sortDirection
-          } else {
-            return -1*this.sortDirection
-          }
-        })
+},
+  "computed": {
+    searchAndSortFiles() {
+      let obj = this.userList;
+      let newArray = [];
+      const serach = this.search.toLowerCase();
+      newArray = obj.filter(function(elem) {
+        if (
+            elem.login.toLowerCase().indexOf(serach) != -1 ||
+            elem.name.toLowerCase().indexOf(serach) != -1  ||
+            String(elem.id).toLowerCase().indexOf(serach) != -1
+            ) {
+          return true;
+        } else {
+          return false;
+        }
+      });
+      return newArray.slice().sort((a, b) => {
+        if (a[newArray] < b[newArray]) {
+          return this.sortDirection
+        } else {
+          return -1*this.sortDirection
+        }
+      })
     }
   },
   methods: {
