@@ -1,13 +1,13 @@
 <!--HTML-->
 <template>
     <div  class="container py-5 text-center">
-      <p> Пользователь: {{authorizedUser}} </p>
       <input type="text" v-model="search" placeholder="Поиск пользователя">
       <p></p>
       <table class="table table-bordered table-dark">
       <thead>
         <tr>
-          <th scope="col"><img src="../assets/sort.svg" width="25" height="25" class="float-right" v-on:click="addParametrsForSort('id')">ID</th>
+<!--         class="d-flex flex-nowrap"-->
+          <th scope="col" width="7%"  ><img src="../assets/sort.svg" width="25" height="25" class="float-right" v-on:click="addParametrsForSort('id')">ID</th>
           <th scope="col"><img src="../assets/sort.svg" width="25" height="25" class="float-right" v-on:click="addParametrsForSort('name')">Имя</th>
           <th scope="col"><img src="../assets/sort.svg" width="25" height="25" class="float-right" v-on:click="addParametrsForSort('login')">Логин</th>
           <th scope="col"><img src="../assets/sort.svg" width="25" height="25" class="float-right" v-on:click="addParametrsForSort('password')">Пароль</th>
@@ -26,38 +26,40 @@
     </div>
 </template>
 
-
+//vue wdh
 <!--VUE-->
 <script>
 
 export default {
   name: 'List',
-  props:["userList", "deleteUserFunc", "authorizedUser"],
+  props:["userList", "deleteUserFunc"],
   data() {
     return {
       sortColumn: '',
       sortDirection:-1,
       search: ""
     }
-},
-  "computed": {
+  },
+  computed: {
     searchAndSortFiles() {
-      let obj = this.userList;
-      let newArray = [];
+      let newArray =  this.userList.slice();
       const serach = this.search.toLowerCase();
-      newArray = obj.filter(function(elem) {
-        if (
-            elem.login.toLowerCase().indexOf(serach) != -1 ||
-            elem.name.toLowerCase().indexOf(serach) != -1  ||
-            String(elem.id).toLowerCase().indexOf(serach) != -1
-            ) {
-          return true;
-        } else {
-          return false;
-        }
-      });
-      return newArray.slice().sort((a, b) => {
-        if (a[newArray] < b[newArray]) {
+      if(serach) {
+        newArray = newArray.filter(function (elem) {
+          if (
+                  elem.login.toLowerCase().indexOf(serach) != -1 ||
+                  elem.name.toLowerCase().indexOf(serach) != -1 ||
+                  String(elem.id).toLowerCase().indexOf(serach) != -1
+          ) {
+            return true;
+          } else {
+            return false;
+          }
+        });
+      }
+      const sortColumn = this.sortColumn;
+      return newArray.sort((a, b) => {
+        if (a[sortColumn] < b[sortColumn]) {
           return this.sortDirection
         } else {
           return -1*this.sortDirection
@@ -67,7 +69,8 @@ export default {
   },
   methods: {
     addParametrsForSort: function (elem) {
-      return (this.sortColumn=elem, this.sortDirection*=-1 )
+      this.sortColumn=elem;
+      this.sortDirection*=-1;
     }
   }
 }

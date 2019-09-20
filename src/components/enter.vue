@@ -1,12 +1,18 @@
 <template>
-    <div id="example-2" class="text-center">
-        <p> Вход </p>
-        <p>  {{token}}  </p>
-        <input v-model="enterLoginUser" placeholder="Логин">
-        <input v-model="enterPasswordUser" placeholder="Пароль">
-        <button  v-on:click="checkUser">Войти</button>
 
-    </div>
+        <div class="col-3  m-auto">
+            <b-card bg-variant="secondary" text-variant="white" header="Вход" class="text-center my-5">
+
+                    <b-form-group class="text-left form-group" label="Логин">
+                        <b-form-input type="text" v-model="enterLoginUser"></b-form-input>
+                    </b-form-group>
+                    <b-form-group class="text-left  " label="Пароль">
+                        <b-form-input type="text" v-model="enterPasswordUser"></b-form-input>
+                    </b-form-group>
+                    <b-button type="button" variant="primary"  v-on:click="checkUser">Войти</b-button>
+            </b-card>
+         </div>
+
 </template>
 
 <script>
