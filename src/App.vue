@@ -4,7 +4,7 @@
             <navbar  v-bind:mainPage = "mainPage" v-bind:Logout = "Logout" v-bind:authorizedUser = "authorizedUser"  v-bind:showArrayFiles = "showArrayFiles"  v-bind:showArrayUsers = "showArrayUsers" />
             <template v-if = "mainPage === 'users'">
                 <addUser v-bind:addUserFunc = "addUserFunc" v-bind:user = "user"/>
-                <html_List_Users v-bind:userList = "userList"  v-bind:deleteUserFunc = "deleteUserFunc" v-bind:authorizedUser = "authorizedUser"/>
+                <html_List_Users v-bind:userList = "userList"  v-bind:deleteUserFunc = "deleteUserFunc" v-bind:authorizedUser = "authorizedUser" v-bind:userLogin = "userLogin"  v-bind:changePassword = "changePassword"/>
             </template>
             <template v-else-if="mainPage === 'files'">
                 <files v-bind:userFiles = "userFiles"  v-bind:addNewFile = "addNewFile" v-bind:deleteFile = "deleteFile"/>
@@ -39,7 +39,8 @@
                 user:null,
                 token: null,
                 authorizedUser:null,
-                mainPage:"users"
+                mainPage:"users",
+                userLogin:""
             }
 
         },
@@ -53,8 +54,8 @@
 
         },
 
-        components: {
-            html_List_Users,     //html_List_Users нужно сделать в 3-х местах APP
+        components: {           // нужно сделать в 3-х местах App.vue
+            html_List_Users,
             addUser,
             enter,
             files,
@@ -72,6 +73,10 @@
             },
             deleteUserFunc: function (id) {
                 axios.post(`http://localhost:3000/ajax/users.json/delete`, {id})
+                    .then(() => this.reloadUserList())
+            },
+            changePassword: function (id, password, repeatPassword) {
+                axios.post(`http://localhost:3000/ajax/users.json/changepassword`, {id, password,  repeatPassword})
                     .then(() => this.reloadUserList())
             },
             reloadUserList: function () {
@@ -104,13 +109,15 @@
                 axios.get('http://localhost:3000/ajax/users.json/name')
                     .then((response) => {
                         this.authorizedUser = response.data.name;   //метод для отрисовки табилцы через другой сервер
-                    })
+                        this.userLogin = response.data.login
+            })
             },
             checkUserFunc: function (login, password) {
                 axios.post(`http://localhost:3000/ajax/users.json/checkuser`, {login, password})
                     .then((response) => {
                         this.token = response.data.token;    //для первого входа
                         this.authorizedUser = response.data.user_name;
+                        this.userLogin = response.data.user_login;
                         console.log(this.authorizedUser);
                         localStorage.setItem('jwttoken', response.data.token);          //для послдеующего входа
                         this.setTitleAuth();
@@ -144,13 +151,6 @@
                         this.reloadFileList()
                     })
             }
-            // searchFile: function (whatWeSearch) {
-            //     axios.post(`http://localhost:3000/ajax/users.json/search`, {whatWeSearch})
-            //         .then(() => {
-            //             this.reloadFileList()
-            //         })
-            // },
-
         }
     }
 

@@ -22,7 +22,7 @@
                 </b-modal>
             </div>
             <p></p>
-            <input type="text" v-model="search" placeholder="Поиск файлов">
+            <input type="text" class="form-control text-center col-3  m-auto" v-model="search" placeholder="Поиск файлов">
 
         </div>
                 <table class="table table-primary container py-5 text-center">
