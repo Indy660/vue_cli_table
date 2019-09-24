@@ -3,11 +3,16 @@
         <template v-if = "token !== null">
             <navbar  v-bind:mainPage = "mainPage" v-bind:Logout = "Logout" v-bind:authorizedUser = "authorizedUser"  v-bind:showArrayFiles = "showArrayFiles"  v-bind:showArrayUsers = "showArrayUsers" />
             <template v-if = "mainPage === 'users'">
-                <addUser v-bind:addUserFunc = "addUserFunc" v-bind:user = "user"/>
-                <html_List_Users v-bind:userList = "userList"  v-bind:deleteUserFunc = "deleteUserFunc" v-bind:authorizedUser = "authorizedUser" v-bind:userLogin = "userLogin"  v-bind:changePassword = "changePassword"/>
+                <template v-if = "userLogin === 'Admin'">
+                    <addUser v-bind:addUserFunc = "addUserFunc" v-bind:user = "user"/>
+                    <html_List_Users v-bind:userList = "userList"  v-bind:deleteUserFunc = "deleteUserFunc" v-bind:authorizedUser = "authorizedUser" v-bind:userLogin = "userLogin"  v-bind:changePassword = "changePassword"/>
+                </template>
+                <template v-else>
+                    <html_List_Users v-bind:userList = "userList"  v-bind:deleteUserFunc = "deleteUserFunc" v-bind:authorizedUser = "authorizedUser" v-bind:userLogin = "userLogin"  v-bind:changePassword = "changePassword"/>
+                </template>
             </template>
             <template v-else-if="mainPage === 'files'">
-                <files v-bind:userFiles = "userFiles"  v-bind:addNewFile = "addNewFile" v-bind:deleteFile = "deleteFile"/>
+                <files v-bind:userFiles = "userFiles"  v-bind:addNewFile = "addNewFile" v-bind:deleteFile = "deleteFile" v-bind:userLogin = "userLogin"/>
 <!--            <button  v-on:click="getArrayFilesFunc">Показать файлы в папке</button>-->
             </template>
         </template>

@@ -2,8 +2,7 @@
     <div id="example-2" class="text-center">
         <h3>Список файлов:</h3>
         <div class="card-footer ">
-
-
+            <template v-if = "userLogin === 'Admin'">
             <div class="text-center">
                 <button class="btn btn-outline-warning my-2 my-sm-0" size="sm" @click="$bvModal.show('bv-modal-example1')">Добавить файл</button>
                     <b-modal id="bv-modal-example1" ref="my-modal" hide-footer="" header-bg-variant="light"><template slot="modal-title"><h4 class="text-dark">Добавьте в список домен</h4></template>
@@ -21,6 +20,7 @@
                 </div>
                 </b-modal>
             </div>
+            </template>
             <p></p>
             <input type="text" class="form-control text-center col-3  m-auto" v-model="search" placeholder="Поиск файлов">
 
@@ -41,8 +41,14 @@
 
                 <tr v-for="file in searchMethod">
                     <td >{{file.domain}}</td>
-                    <td >{{file.ip}}  <a><img src="../assets/cancel.svg" width="25" height="25"
-                                              class="float-right" v-on:click="deleteFile(file.domain)"></a> </td>
+                        <template v-if = "userLogin === 'Admin'">
+                        <td > {{file.ip}}
+                            <a><img src="../assets/cancel.svg" width="25" height="25"
+                            class="float-right" v-on:click="deleteFile(file.domain)"></a> </td>
+                        </template>
+                        <template v-else>
+                            <td >{{file.ip}}</td>
+                        </template>
                 </tr>
                 </tbody>
                 </table>
@@ -53,7 +59,7 @@
 
     export default {
         name: "files",
-        props:["userFiles", "addNewFile", "deleteFile"],
+        props:["userFiles", "addNewFile", "deleteFile", "userLogin"],
         data() {
             return {
                 domain: null,
@@ -83,6 +89,7 @@
                 this.addNewFile(this.domain,this.ip);
                 this.domain="";
                 this.ip="";
+                this.$bvModal.hide('bv-modal-example1')
             },
         }
     }

@@ -45,6 +45,7 @@
                 this.nameUser="";
                 this.loginUser="";
                 this.passwordUser="";
+                this.$bvModal.hide('bv-modal-example2')
             },
         }
     }

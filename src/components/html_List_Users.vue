@@ -20,13 +20,17 @@
         <tr v-for="user in searchAndSortFiles">
           <td>{{user.id}}</td>
           <td>{{user.name}}</td>
-          <td>{{user.login}}<img src = "../assets/cancel.svg" width="25" height="25" class="float-right" v-on:click = "deleteUserFunc(user.id)"></td>
             <template v-if = "userLogin === 'Admin'">
+                <td>{{user.login}}<img src = "../assets/cancel.svg" width="25" height="25" class="float-right" v-on:click = "deleteUserFunc(user.id)"></td>
                 <td><img src = "../assets/exchange.svg" width="25" height="25"  v-on:click = "userID=user.id; $bvModal.show('bv-modal-example3')" ></td>
+            </template>
+            <template v-else>
+                <td>{{user.login}}<img src = "../assets/cancel.svg" width="25" height="25" class="float-right"</td>
             </template>
         </tr>
         </tbody>
       </table>
+<!--        модальное окно-->
         <div class="text-center">
             <b-modal id="bv-modal-example3" ref="my-modal" hide-footer="" header-bg-variant="light">
                 <template slot="modal-title"><h4 class="text-dark">Измените пароль пользователя и повторите его</h4></template>
@@ -108,6 +112,7 @@ export default {
         this.changePassword(this.userID, this.newPasswordUser, this.newPasswordUserAgain);
         this.newPasswordUser="";
         this.newPasswordUserAgain="";
+        this.$bvModal.hide('bv-modal-example3')
     }
   }
 }
