@@ -4,7 +4,7 @@
             <navbar  v-bind:mainPage = "mainPage" v-bind:Logout = "Logout" v-bind:authorizedUser = "authorizedUser"  v-bind:showArrayFiles = "showArrayFiles"  v-bind:showArrayUsers = "showArrayUsers" />
             <template v-if = "mainPage === 'users'">
                 <template v-if = "userLogin === 'Admin'">
-                    <addUser v-bind:addUserFunc = "addUserFunc" v-bind:user = "user"/>
+                    <addUser v-bind:addUserFunc = "addUserFunc" v-bind:user = "user" v-bind:messageWithMistakeAdd = "messageWithMistakeAdd" />
                     <html_List_Users v-bind:userList = "userList"  v-bind:deleteUserFunc = "deleteUserFunc" v-bind:authorizedUser = "authorizedUser" v-bind:userLogin = "userLogin"  v-bind:changePassword = "changePassword"/>
                 </template>
                 <template v-else>
@@ -18,7 +18,7 @@
         </template>
 
         <template v-else>
-            <enter v-bind:checkUserFunc = "checkUserFunc" v-bind:token = "token"/>
+            <enter v-bind:checkUserFunc = "checkUserFunc" v-bind:token = "token"  v-bind:messageWithMistakeEnter = "messageWithMistakeEnter" />
         </template>
     </div>
 </template>
@@ -45,7 +45,9 @@
                 token: null,
                 authorizedUser:null,
                 mainPage:"users",
-                userLogin:""
+                userLogin:"",
+                messageWithMistakeAdd:"",
+                messageWithMistakeEnter:""
             }
 
         },
@@ -75,6 +77,11 @@
                     login, name, password           //для пост запросов
                 })
                     .then(() => this.reloadUserList())
+                    .catch(error => {
+                        console.log(error.response.data.message)               //системная ошибка
+                        // console.log(error.response)      // ответ от сервера (объект)
+                        this.messageWithMistakeAdd = error.response.data.message;
+                    })
             },
             deleteUserFunc: function (id) {
                 axios.post(`http://localhost:3000/ajax/users.json/delete`, {id})
@@ -127,6 +134,11 @@
                         localStorage.setItem('jwttoken', response.data.token);          //для послдеующего входа
                         this.setTitleAuth();
                         this.reloadUserList();
+                    })
+                    .catch(error => {
+                        // console.log(error)               //системная ошибка
+                        // console.log(error.response)      // ответ от сервера (объект)
+                        this.messageWithMistakeEnter = error.response.data.message;
                     })
             },
             Logout: function () {

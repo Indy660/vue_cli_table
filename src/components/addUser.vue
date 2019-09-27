@@ -3,6 +3,7 @@
         <p></p>
 
         <div class="text-center">
+            <p class="text-warning">{{messageWithMistakeAdd}}</p>
 <!--            <button type="button" class="btn btn-success" data-toggle="my-modal" data-target="#bv-modal-example2" @click="$bvModal.show('bv-modal-example2')  >-->
             <button class="btn btn-success" size="sm" @click="$bvModal.show('bv-modal-example2')">Добавить нового пользователя</button>
             <b-modal id="bv-modal-example2" ref="my-modal" hide-footer="" header-bg-variant="light"><template slot="modal-title"><h4 class="text-dark">Добавьте имя, логин и пароль пользователя</h4></template>
@@ -31,7 +32,7 @@
 <script>
     export default {
         name: "addUser",
-        props:[ "addUserFunc"],
+        props:[ "addUserFunc", "messageWithMistakeAdd"],
         data() {
             return {
                 nameUser: null,
