@@ -69,19 +69,20 @@
             navbar
         },
         methods: {
-            addUserFunc: function (name, login, password,) {
+             addUserFunc: function (name, login, password,cb) {   //callback функция
                 axios.post(`http://localhost:3000/ajax/users.json/addUser`, {
-                    // data:{                       //для гет запросов
-                    //     name, login, password
-                    // }
                     login, name, password           //для пост запросов
                 })
-                    .then(() => this.reloadUserList())
-                    .catch(error => {
-                        console.log(error.response.data.message)               //системная ошибка
-                        // console.log(error.response)      // ответ от сервера (объект)
-                        this.messageWithMistakeAdd = error.response.data.message;
-                    })
+                .then(() => {
+                    this.messageWithMistakeAdd = null;
+                    this.reloadUserList();
+                    cb()
+                })
+                .catch(error => {
+                    console.log(error.response.data.message);
+                    this.messageWithMistakeAdd = error.response.data.message;
+                    cb(error)
+                })
             },
             deleteUserFunc: function (id) {
                 axios.post(`http://localhost:3000/ajax/users.json/delete`, {id})
@@ -133,6 +134,7 @@
                         console.log(this.authorizedUser);
                         localStorage.setItem('jwttoken', response.data.token);          //для послдеующего входа
                         this.setTitleAuth();
+                        this.messageWithMistakeEnter = null;
                         this.reloadUserList();
                     })
                     .catch(error => {

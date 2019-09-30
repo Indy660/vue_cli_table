@@ -4,31 +4,32 @@
 
       <input type="text" class="form-control text-center col-3  m-auto" v-model="search" placeholder="Поиск пользователя">
       <p></p>
+
       <table class="table table-bordered table-dark">
-      <thead>
-        <tr>
-<!--         class="d-flex flex-nowrap"-->
-          <th scope="col" width="7%"  ><img src="../assets/sort.svg" width="25" height="25" class="float-right" v-on:click="addParametrsForSort('id')">ID</th>
-          <th scope="col"><img src="../assets/sort.svg" width="25" height="25" class="float-right" v-on:click="addParametrsForSort('name')">Имя</th>
-          <th scope="col"><img src="../assets/sort.svg" width="25" height="25" class="float-right" v-on:click="addParametrsForSort('login')">Логин</th>
-            <template v-if = "userLogin === 'Admin'">
-                <th scope="col" width="20%">Изменить пароль</th>
-            </template>
-        </tr>
-        </thead>
-        <tbody>
-        <tr v-for="user in searchAndSortFiles">
-          <td>{{user.id}}</td>
-          <td>{{user.name}}</td>
-            <template v-if = "userLogin === 'Admin'">
-                <td>{{user.login}}<img src = "../assets/cancel.svg" width="25" height="25" class="float-right" v-on:click = "deleteUserFunc(user.id)"></td>
-                <td><img src = "../assets/exchange.svg" width="25" height="25"  v-on:click = "userID=user.id; $bvModal.show('bv-modal-example3')" ></td>
-            </template>
-            <template v-else>
-                <td>{{user.login}}<img src = "../assets/cancel.svg" width="25" height="25" class="float-right"</td>
-            </template>
-        </tr>
-        </tbody>
+          <thead>
+            <tr>
+    <!--         class="d-flex flex-nowrap"-->
+              <th scope="col" width="7%"  ><img src="../assets/sort.svg" width="25" height="25" class="float-right" v-on:click="addParametrsForSort('id')">ID</th>
+              <th scope="col"><img src="../assets/sort.svg" width="25" height="25" class="float-right" v-on:click="addParametrsForSort('name')">Имя</th>
+              <th scope="col"><img src="../assets/sort.svg" width="25" height="25" class="float-right" v-on:click="addParametrsForSort('login')">Логин</th>
+                <template v-if = "userLogin === 'Admin'">
+                    <th scope="col" width="20%">Изменить пароль</th>
+                </template>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for="user in searchAndSortFiles">
+              <td>{{user.id}}</td>
+              <td>{{user.name}}</td>
+                <template v-if = "userLogin === 'Admin'">
+                    <td>{{user.login}}<img src = "../assets/cancel.svg" width="25" height="25" class="float-right" v-on:click = "deleteUserFunc(user.id)"></td>
+                    <td><img src = "../assets/exchange.svg" width="25" height="25"  v-on:click = "userID=user.id; $bvModal.show('bv-modal-example3')" ></td>
+                </template>
+                <template v-else>
+                    <td>{{user.login}}<img src = "../assets/cancel.svg" width="25" height="25" class="float-right"</td>
+                </template>
+            </tr>
+            </tbody>
       </table>
 <!--        модальное окно-->
         <div class="text-center">
@@ -66,8 +67,7 @@ export default {
       search: "",
       newPasswordUser: "",
       newPasswordUserAgain:"",
-      userID:null,
-
+      userID:null
     }
   },
   computed: {

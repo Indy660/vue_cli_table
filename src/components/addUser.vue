@@ -3,8 +3,9 @@
         <p></p>
 
         <div class="text-center">
-            <p class="text-warning">{{messageWithMistakeAdd}}</p>
-<!--            <button type="button" class="btn btn-success" data-toggle="my-modal" data-target="#bv-modal-example2" @click="$bvModal.show('bv-modal-example2')  >-->
+<!--            <p class="text-warning">{{messageWithMistakeAdd}}</p>-->
+
+
             <button class="btn btn-success" size="sm" @click="$bvModal.show('bv-modal-example2')">Добавить нового пользователя</button>
             <b-modal id="bv-modal-example2" ref="my-modal" hide-footer="" header-bg-variant="light"><template slot="modal-title"><h4 class="text-dark">Добавьте имя, логин и пароль пользователя</h4></template>
                 <div class="d-block text-right">
@@ -23,6 +24,17 @@
 
                     </form>
                 </div>
+                <template v-if = "Boolean(messageWithMistakeAdd) === true">
+                    <b-alert
+                            :show="dismissCountDown"
+                            dismissible
+                            variant="danger"
+                            @dismissed="dismissCountDown=0"
+                            @dismiss-count-down="countDownChanged"
+                    >
+                        {{messageWithMistakeAdd}}
+                    </b-alert>
+                </template>
             </b-modal>
         </div>
 
@@ -38,16 +50,30 @@
                 nameUser: null,
                 loginUser: null,
                 passwordUser: null,
+                dismissSecs: 3,
+                dismissCountDown: 0
             }
         },
+        // mounted() {
+        //     this.messageWithMistakeAdd = "5";
+        // },
         methods:{
             pushing: function () {
-                this.addUserFunc(this.nameUser,this.loginUser,this.passwordUser);
+                this.addUserFunc(this.nameUser,this.loginUser,this.passwordUser,(err)=>{
+                    console.log(this.messageWithMistakeAdd);            //отстает на одно действие, считывает старое значение
+                    if (Boolean(this.messageWithMistakeAdd) === false) {this.$bvModal.hide('bv-modal-example2')  }
+                    else {this.dismissCountDown = this.dismissSecs;}
+                });
                 this.nameUser="";
                 this.loginUser="";
                 this.passwordUser="";
-                this.$bvModal.hide('bv-modal-example2')
             },
+            countDownChanged(dismissCountDown) {
+                this.dismissCountDown = dismissCountDown
+            },
+            // deleteMessage() {
+            //     if ( event.keyCode)
+            // }
         }
     }
 </script>
