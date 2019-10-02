@@ -18,7 +18,7 @@
         </template>
 
         <template v-else>
-            <enter v-bind:checkUserFunc = "checkUserFunc" v-bind:token = "token"  v-bind:messageWithMistakeEnter = "messageWithMistakeEnter" />
+            <enter v-bind:checkUserFunc = "checkUserFunc" v-bind:token = "token"  v-bind:messageWithMistakeEnter = "messageWithMistakeEnter"  v-bind:noMitstakeMessage = "noMitstakeMessage"/>
         </template>
     </div>
 </template>
@@ -47,7 +47,8 @@
                 mainPage:"users",
                 userLogin:"",
                 messageWithMistakeAdd:"",
-                messageWithMistakeEnter:""
+                messageWithMistakeEnter:"",
+                noMitstakeMessage:""
             }
 
         },

@@ -28,6 +28,9 @@
                         {{messageWithMistakeEnter}}
                     </b-alert>
                     </template>
+
+<!--                    <template v-else> {{noMitstakeMessage}} </template>-->
+
                 </div>
             </b-card>
          </div>
@@ -37,7 +40,7 @@
 <script>
     export default {
         name: "enter",
-        props:[ "checkUserFunc", "messageWithMistakeEnter"],
+        props:[ "checkUserFunc", "messageWithMistakeEnter", "noMitstakeMessage"],
         // "token",
         data() {
             return {
@@ -54,13 +57,14 @@
                 this.enterPasswordUser="";
                 this.dismissCountDown = this.dismissSecs  //для появления алерта
             },
-        countDownChanged(dismissCountDown) {
-             this.dismissCountDown = dismissCountDown
+            countDownChanged(dismissCountDown) {
+                this.dismissCountDown = dismissCountDown
             },
-        // showAlert() {
-        //
-        //     }
+            hideAlert: function() {
+
+            }
         }
     }
 </script>
 
+<!--// если v input пустой, то-->
