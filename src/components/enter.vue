@@ -8,26 +8,24 @@
 
 
                 <b-form-group class="text-left form-group" label="Логин">
-                        <b-form-input type="text" v-model="enterLoginUser"></b-form-input>
+                        <b-form-input type="text" v-model="enterLoginUser"  v-on:click="hideAlert"></b-form-input>
                     </b-form-group>
                     <b-form-group class="text-left  " label="Пароль">
-                        <b-form-input type="text" v-model="enterPasswordUser"></b-form-input>
+                        <b-form-input type="text" v-model="enterPasswordUser" v-on:click="hideAlert"></b-form-input>
                     </b-form-group>
                     <b-button type="button" variant="primary"  v-on:click="checkUser">Войти</b-button>
                 <div>
 
                     <p></p>
-                    <template v-if = "Boolean(messageWithMistakeEnter) === true">
+
                     <b-alert
-                            :show="dismissCountDown"
-                            dismissible
+                            :show="showDismissibleAlert"
+                             @dismissed="showDismissibleAlert = false"
                             variant="danger"
-                            @dismissed="dismissCountDown=0"
-                            @dismiss-count-down="countDownChanged"
                     >
                         {{messageWithMistakeEnter}}
                     </b-alert>
-                    </template>
+
 
 <!--                    <template v-else> {{noMitstakeMessage}} </template>-->
 
@@ -46,8 +44,7 @@
             return {
                 enterLoginUser: null,
                 enterPasswordUser: null,
-                dismissSecs: 3,
-                dismissCountDown: 0
+                showDismissibleAlert: false
             }
         },
         methods:{
@@ -55,13 +52,12 @@
                 this.checkUserFunc(this.enterLoginUser,this.enterPasswordUser);
                 this.enterLoginUser="";
                 this.enterPasswordUser="";
-                this.dismissCountDown = this.dismissSecs  //для появления алерта
-            },
-            countDownChanged(dismissCountDown) {
-                this.dismissCountDown = dismissCountDown
+                this.showDismissibleAlert = true
             },
             hideAlert: function() {
-
+                if ((this.enterLoginUser) || (this.enterPasswordUser)) {
+                    this.showDismissibleAlert = false
+                }
             }
         }
     }
