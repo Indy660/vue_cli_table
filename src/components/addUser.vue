@@ -11,30 +11,28 @@
                 <div class="d-block text-right">
                     <form ref="form">
                         <b-form-group class="text-left" label="Имя">
-                            <b-form-input type="text" v-model="nameUser"></b-form-input>
+                            <b-form-input type="text" v-model="nameUser" v-on:click="hideAlert"></b-form-input>
                         </b-form-group>
                         <b-form-group class="text-left" label="Логин">
-                            <b-form-input type="text" v-model="loginUser"></b-form-input>
+                            <b-form-input type="text" v-model="loginUser" v-on:click="hideAlert"></b-form-input>
                         </b-form-group>
                         <b-form-group class="text-left" label="Пароль">
-                            <b-form-input type="text" v-model="passwordUser"></b-form-input>
+                            <b-form-input type="text" v-model="passwordUser" v-on:click="hideAlert"></b-form-input>
                         </b-form-group>
                         <b-button class="mx-2" type="button"  variant="danger" data-dismiss="my-modal" @click="$bvModal.hide('bv-modal-example2')">Отмена</b-button>
                         <b-button type="button" variant="primary"  v-on:click="pushing">Добавить пользователя</b-button>
 
                     </form>
                 </div>
-                <template v-if = "Boolean(messageWithMistakeAdd) === true">
+
                     <b-alert
-                            :show="dismissCountDown"
-                            dismissible
+                            :show="showDismissibleAlert"
+                            @dismissed="showDismissibleAlert = false"
                             variant="danger"
-                            @dismissed="dismissCountDown=0"
-                            @dismiss-count-down="countDownChanged"
                     >
                         {{messageWithMistakeAdd}}
                     </b-alert>
-                </template>
+
             </b-modal>
         </div>
 
@@ -50,8 +48,7 @@
                 nameUser: null,
                 loginUser: null,
                 passwordUser: null,
-                dismissSecs: 3,
-                dismissCountDown: 0
+                showDismissibleAlert: false
             }
         },
         // mounted() {
@@ -61,19 +58,19 @@
             pushing: function () {
                 this.addUserFunc(this.nameUser,this.loginUser,this.passwordUser,(err)=>{
                     console.log(this.messageWithMistakeAdd);            //отстает на одно действие, считывает старое значение
-                    if (Boolean(this.messageWithMistakeAdd) === false) {this.$bvModal.hide('bv-modal-example2')  }
-                    else {this.dismissCountDown = this.dismissSecs;}
-                });
+                //     if (Boolean(this.messageWithMistakeAdd) === false) {this.$bvModal.hide('bv-modal-example2')  }
+                //     else {this.dismissCountDown = this.dismissSecs;}
+                 });
                 this.nameUser="";
                 this.loginUser="";
                 this.passwordUser="";
+                this.showDismissibleAlert = true
             },
-            countDownChanged(dismissCountDown) {
-                this.dismissCountDown = dismissCountDown
-            },
-            // deleteMessage() {
-            //     if ( event.keyCode)
-            // }
+            hideAlert: function() {
+                if ((this.nameUser) || (this.loginUser) || (this.passwordUser)) {
+                    this.showDismissibleAlert = false
+                }
+            }
         }
     }
 </script>
